@@ -32,9 +32,13 @@
 - (void)dk_setImage:(DKImagePicker)picker forState:(UIControlState)state {
     
     if (UIControlStateNormal == state) {
-        [self setImage:picker(self.dk_manager.themeVersion)];
+        UIImage *image = picker(self.dk_manager.themeVersion);
+        image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [self setImage:image];
     } else if (UIControlStateSelected == state) {
-        [self setSelectedImage:picker(self.dk_manager.themeVersion)];
+        UIImage *image = picker(self.dk_manager.themeVersion);
+        image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [self setSelectedImage:image];
     }
     
     NSString *key = [NSString stringWithFormat:@"%@", @(state)];
@@ -64,11 +68,14 @@
                 } else if ([selector isEqualToString:NSStringFromSelector(@selector(setImage:))]) {
                     if (UIControlStateNormal == state) {
                         UIImage *resultImage = ((DKImagePicker)picker)(self.dk_manager.themeVersion);
+                        resultImage = [resultImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+
                         [self setImage:resultImage];
                     }
                 } else if ([selector isEqualToString:NSStringFromSelector(@selector(setSelectedImage:))]) {
                     if (UIControlStateSelected == state) {
                         UIImage *resultImage = ((DKImagePicker)picker)(self.dk_manager.themeVersion);
+                        resultImage = [resultImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
                         [self setSelectedImage:resultImage];
                     }
                 }
