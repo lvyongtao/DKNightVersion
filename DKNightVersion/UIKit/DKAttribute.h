@@ -10,15 +10,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DKAttribute : NSObject
-
-
 typedef NSString DKThemeVersion;
 
-typedef NSDictionary *(^DKAttributePicker)(DKThemeVersion *themeVersion);
+typedef NSDictionary *_Nonnull(^DKAttributePicker)(DKThemeVersion *themeVersion);
 
 DKAttributePicker DKAttributePickerWithAttributes(NSDictionary *normal, ...);
 
+
+@interface DKAttribute : NSObject
 
 @end
 

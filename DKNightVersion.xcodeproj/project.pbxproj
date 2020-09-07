@@ -240,8 +240,8 @@
 				72E18B451CBA03480004EBB2 /* UIView+Night.m */,
 				D888AAC32505B0A10027266A /* DKAttribute.h */,
 				D888AAC42505B0A10027266A /* DKAttribute.m */,
-				D888AAC02505AFE10027266A /* UITabBarItem+Night.m */,
 				D888AABF2505AFE10027266A /* UITabBarItem+Night.h */,
+				D888AAC02505AFE10027266A /* UITabBarItem+Night.m */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";

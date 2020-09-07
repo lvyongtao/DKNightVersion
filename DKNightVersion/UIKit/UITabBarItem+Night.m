@@ -7,8 +7,6 @@
 //
 
 #import "UITabBarItem+Night.h"
-#import "DKNightVersionManager.h"
-#import <objc/runtime.h>
 
 @interface UITabBarItem ()
 
@@ -19,38 +17,9 @@
 @implementation UITabBarItem (Night)
 
 
-- (DKImagePicker)dk_imagePicker
-{
-    return objc_getAssociatedObject(self, @selector(dk_imagePicker));
-}
-
-- (DKImagePicker)dk_selectedImagePicker
-{
-    return objc_getAssociatedObject(self, @selector(dk_selectedImagePicker));
-}
-
-- (void)dk_setImagePicker:(DKImagePicker)picker
-{
-    objc_setAssociatedObject(self, @selector(dk_imagePicker), picker, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    self.image = picker(self.dk_manager.themeVersion);
-
-    NSString *key = NSStringFromSelector(@selector(setImage:));
-    [self.pickers setValue:[picker copy] forKey:key];
-}
-
-- (void)dk_setSelectedImagePicker:(DKImagePicker)picker
-{
-    objc_setAssociatedObject(self, @selector(dk_imagePicker), picker, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    self.selectedImage = picker(self.dk_manager.themeVersion);
-
-    NSString *key = NSStringFromSelector(@selector(setSelectedImage:));
-    [self.pickers setValue:[picker copy] forKey:key];
-}
-
-
 - (void)dk_setTitleAttributePicker:(DKAttributePicker)picker forState:(UIControlState)state {
-
     [self setTitleTextAttributes:picker(self.dk_manager.themeVersion) forState:state];
+    
     NSString *key = [NSString stringWithFormat:@"%@", @(state)];
     NSMutableDictionary *dictionary = [self.pickers valueForKey:key];
     if (!dictionary) {
@@ -60,8 +29,30 @@
     [self.pickers setValue:dictionary forKey:key];
 }
 
-- (void)night_updateColor {
+- (void)dk_setImage:(DKImagePicker)picker forState:(UIControlState)state {
+    
+    if (UIControlStateNormal == state) {
+        [self setImage:picker(self.dk_manager.themeVersion)];
+    } else if (UIControlStateSelected == state) {
+        [self setSelectedImage:picker(self.dk_manager.themeVersion)];
+    }
+    
+    NSString *key = [NSString stringWithFormat:@"%@", @(state)];
+    NSMutableDictionary *dictionary = [self.pickers valueForKey:key];
+    if (!dictionary) {
+        dictionary = [[NSMutableDictionary alloc] init];
+    }
+    
+    if (UIControlStateNormal == state) {
+        [dictionary setValue:[picker copy] forKey:NSStringFromSelector(@selector(setImage:))];
+    } else if (UIControlStateSelected == state) {
+        [dictionary setValue:[picker copy] forKey:NSStringFromSelector(@selector(setSelectedImage:))];
+    }
+    [self.pickers setValue:dictionary forKey:key];
+}
 
+- (void)night_updateColor {
+    
     [self.pickers enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         if ([obj isKindOfClass:[NSDictionary class]]) {
             NSDictionary<NSString *, DKAttributePicker> *dictionary = (NSDictionary *)obj;
@@ -70,6 +61,16 @@
                 if ([selector isEqualToString:NSStringFromSelector(@selector(setTitleTextAttributes:forState:))]) {
                     NSDictionary *attribute = picker(self.dk_manager.themeVersion);
                     [self setTitleTextAttributes:attribute forState:state];
+                } else if ([selector isEqualToString:NSStringFromSelector(@selector(setImage:))]) {
+                    if (UIControlStateNormal == state) {
+                        UIImage *resultImage = ((DKImagePicker)picker)(self.dk_manager.themeVersion);
+                        [self setImage:resultImage];
+                    }
+                } else if ([selector isEqualToString:NSStringFromSelector(@selector(setSelectedImage:))]) {
+                    if (UIControlStateSelected == state) {
+                        UIImage *resultImage = ((DKImagePicker)picker)(self.dk_manager.themeVersion);
+                        [self setSelectedImage:resultImage];
+                    }
                 }
             }];
         } else {
@@ -83,11 +84,10 @@
                                  [self performSelector:sel withObject:attribute];
 #pragma clang diagnostic pop
                              }];
-
+            
         }
     }];
 }
-
 
 
 @end

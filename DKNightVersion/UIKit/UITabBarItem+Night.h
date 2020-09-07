@@ -15,11 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UITabBarItem (Night)
 
-@property (nullable, nonatomic, copy, setter = dk_setImagePicker:) DKImagePicker dk_imagePicker;
-
-@property (nullable, nonatomic, copy, setter = dk_setSelectedImagePicker:) DKImagePicker dk_selectedImagePicker;
-
 - (void)dk_setTitleAttributePicker:(DKAttributePicker)picker forState:(UIControlState)state;
+- (void)dk_setImage:(DKImagePicker)picker forState:(UIControlState)state;
 
 @end
 
