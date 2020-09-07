@@ -26,6 +26,8 @@ FOUNDATION_EXPORT const unsigned char DKNightVersionVersionString[];
 #import <DKNightVersion/DKNightVersionManager.h>
 #import <DKNightVersion/NSObject+Night.h>
 #import <DKNightVersion/DKAlpha.h>
+#import <DKNightVersion/DKAttribute.h>
+
 
 #import <DKNightVersion/DKColorTable.h>
 
